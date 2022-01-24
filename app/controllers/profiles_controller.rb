@@ -18,13 +18,14 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    params_with_projects = project_params
-    @project = Project.find_by(experience_id: params[:id])
-    if @project.update(params_with_projects)
-      flash[:success] = 'Projects added successfully'
+    updated_profile_params = update_array_attributes_in_params(profile_params)
+    @profile = Profile.find(params[:id])
+    attach_profile_pic(@profile, params[:avatar])
+    if @profile.update(updated_profile_params)
+      flash[:success] = 'Profile updated successfully.'
       redirect_to edit_url
     else
-      flash[:danger] = 'Failed to add projects'
+      flash[:danger] = 'Profile update failed.'
       redirect_to root_url
     end
   end
